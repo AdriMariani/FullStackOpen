@@ -9,14 +9,12 @@ const Button = ({onClick, text}) => {
   )
 }
 
-const FeedbackInput = ({handleClick}) => {
+const Statistic = ({text, value}) => {
   return (
-    <div>
-      <h1>give feedback</h1>
-      <Button onClick={handleClick("good")} text="good"/>
-      <Button onClick={handleClick("neutral")} text="neutral"/>
-      <Button onClick={handleClick("bad")} text="bad"/>
-    </div>
+    <tr>
+      <th scope="row">{text}</th>
+      <td>{value}</td>
+    </tr>
   )
 }
 
@@ -38,12 +36,27 @@ const ShowStats = ({good, neutral, bad}) => {
   return (
     <div>
       <h1>statistics</h1>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {total}</p>
-      <p>average {average}</p>
-      <p>positive {positive} %</p>
+      <table>
+        <tbody>
+          <Statistic text="good" value={good}/>
+          <Statistic text="neutral" value={neutral}/>
+          <Statistic text="bad" value={bad}/>
+          <Statistic text="all" value={total}/>
+          <Statistic text="average" value={average}/>
+          <Statistic text="positive" value={positive}/>
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+const FeedbackInput = ({handleClick}) => {
+  return (
+    <div>
+      <h1>give feedback</h1>
+      <Button onClick={handleClick("good")} text="good"/>
+      <Button onClick={handleClick("neutral")} text="neutral"/>
+      <Button onClick={handleClick("bad")} text="bad"/>
     </div>
   )
 }
