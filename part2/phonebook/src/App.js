@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import Phonebook from './components/Phonebook'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
 
 const App = () => {
   const [ persons, setPersons ] = useState([
@@ -23,7 +25,7 @@ const App = () => {
   }
 
   const validateForm = () => {
-    const pattern = /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/;
+    const pattern = /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/
     let message = 'Error: \n'
     let isValid = true
 
@@ -58,21 +60,14 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <form>
-        filter shown with <input value={filter} onChange={handleFilterChange}></input>
-      </form>
+      <Filter value={filter} handleChange={handleFilterChange}/>
       <h3>Add New Entry</h3>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input name="name" value={newName} onChange={handleInputChange}/>
-        </div>
-        <div>
-          number: <input name="number" value={newNumber} onChange={handleInputChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm 
+        newName={newName} 
+        newNumber={newNumber} 
+        addPerson={addPerson} 
+        handleChange={handleInputChange}
+      />
       <h2>Numbers</h2>
       <div>
         {filter === '' ?
