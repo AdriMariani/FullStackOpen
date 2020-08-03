@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Search from './components/Search';
-import SearchResults from './components/SearchResults'
+import SearchResults from './components/SearchResults';
 
 const App = () => {
   const [search, setSearch] = useState('');
@@ -15,6 +15,8 @@ const App = () => {
 
   const handleSearchChange = event => setSearch(event.target.value);
 
+  const changeSearchOnClick = event => setSearch(event.target.attributes.country.value)
+
   const filteredCountries = countries.filter(country => { 
       return country.name.toLowerCase().startsWith(search.toLowerCase());
     });
@@ -22,7 +24,7 @@ const App = () => {
   return (
     <div>
       <Search value={search} handleChange={handleSearchChange}/>
-      <SearchResults countries={filteredCountries}/>
+      <SearchResults countries={filteredCountries} buttonClick={changeSearchOnClick}/>
     </div>
   );
 }
