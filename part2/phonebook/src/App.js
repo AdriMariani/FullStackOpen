@@ -60,21 +60,24 @@ const App = () => {
     if(foundPerson) {
       if(window.confirm(`${foundPerson.name} is already added to the phonebook, replace the old number with a new one?`)){
         PersonService.update(foundPerson.id, newPerson)
-        .then( returnedPerson => {
-          setPersons(persons.map(p => p.id !== foundPerson.id ? p : returnedPerson))
-          setNewName('')
-          setNewNumber('')
-          addNotification(`Updated ${returnedPerson.name}'s number`,false)
-        });
+          .then( returnedPerson => {
+            setPersons(persons.map(p => p.id !== foundPerson.id ? p : returnedPerson))
+            setNewName('')
+            setNewNumber('')
+            addNotification(`Updated ${returnedPerson.name}'s number`,false)
+          })
+          .catch(err => addNotification(err.response.data.error, true))
       }
     }
     else {
-      PersonService.create(newPerson).then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
-        setNewName('')
-        setNewNumber('')
-        addNotification(`Added ${returnedPerson.name}`,false)
-      })
+      PersonService.create(newPerson)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+          addNotification(`Added ${returnedPerson.name}`,false)
+        })
+        .catch(err => addNotification(err.response.data.error, true))
     }
   }
 
