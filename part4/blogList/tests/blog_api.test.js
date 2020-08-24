@@ -49,4 +49,20 @@ test('can successfully add a blog', async () => {
   expect(blogTitles).toContain(newBlog.title)
 })
 
+test('adding blog missing likes property will have 0 likes', async () => {
+  const newBlog = {
+    title: 'new blog',
+    author: 'Greg Newblog',
+    url: 'http://www.newblog.com'
+  }
+
+  const savedNote = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  expect(savedNote.body.likes).toBe(0)
+})
+
 afterAll(() => mongoose.connection.close())
