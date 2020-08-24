@@ -28,4 +28,25 @@ test('a blog has the id property and not _id', async () => {
   expect(response.body[0]._id).toBeUndefined()
 })
 
+test('can successfully add a blog', async () => {
+  const newBlog = {
+    title: "new blog",
+    author: "Greg Newblog",
+    url: "http://www.newblog.com",
+    likes: 21
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogs = await testHelper.blogsInDb()
+  const blogTitles = blogs.map(blog => blog.title)
+
+  expect(blogs).toHaveLength(testHelper.initialBlogs.length + 1)
+  expect(blogTitles).toContain(newBlog.title)
+})
+
 afterAll(() => mongoose.connection.close())
