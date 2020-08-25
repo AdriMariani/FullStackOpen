@@ -28,6 +28,18 @@ describe('getting blogs', () => {
     expect(response.body[0].id).toBeDefined()
     expect(response.body[0]._id).toBeUndefined()
   })
+
+  test('can get a specific blog with its id', async () => {
+    const blogs = await testHelper.blogsInDb()
+    const blogToGet = blogs[0]
+
+    const blogFromServer = await api
+      .get(`/api/blogs/${blogToGet.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    expect(blogFromServer.body).toEqual(blogToGet)
+  })
 })
 
 describe('adding blogs', () => {
