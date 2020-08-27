@@ -13,6 +13,12 @@ const userSchema = new mongoose.Schema({
     required: [true, 'name must be provided']
   },
   passwordHash: String,
+  blogs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Blog'
+    }
+  ]
 })
 
 userSchema.plugin(uniqueValidator)
