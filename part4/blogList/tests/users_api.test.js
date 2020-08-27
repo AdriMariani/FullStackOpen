@@ -6,21 +6,34 @@ const test_helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
 
+beforeEach(async () => {
+  await User.deleteMany({})
 
-describe('when there is initially one user in db', () => {
-  beforeEach(async () => {
-    await User.deleteMany({})
-
-    const passwordHash = await bcrypt.hash('sekret', 10)
-    const user = new User({ 
-      username: 'root', 
-      name: 'root',
-      passwordHash 
-    })
-
-    await user.save()
+  const passwordHash = await bcrypt.hash('sekret', 10)
+  const user = new User({ 
+    username: 'root', 
+    name: 'root',
+    passwordHash 
   })
 
+  await user.save()
+})
+
+describe('getting users', () => {
+  test('able to retrieve all users', async () => {
+    const usersInDb = await test_helper.usersInDb()
+
+    const result = await api
+      .get('/api/users')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body).toHaveLength(usersInDb.length)
+  })
+})
+
+
+describe('creating users', () => {
   test('creation succeeds with a fresh username', async () => {
     const usersAtStart = await test_helper.usersInDb()
 
@@ -61,6 +74,88 @@ describe('when there is initially one user in db', () => {
     expect(result.body.error).toContain('`username` to be unique')
 
     const usersAtEnd = await test_helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+
+  test('creating username with less than 3 characters fails', async () => {
+    const usersAtStart = await test_helper.usersInDb()
+
+    const user = {
+      username: "ab",
+      name: "person",
+      password: "xyzabc"
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(user)
+      .expect(400)
+
+    expect(result.body.error).toContain('username must be at least 3 characters')
+
+    const usersAtEnd = await test_helper.usersInDb()
+
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+
+  test('creating user with password under 3 characters fails', async () => {
+    const usersAtStart = await test_helper.usersInDb()
+
+    const user = {
+      username: "testuser",
+      name: "person",
+      password: "a"
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(user)
+      .expect(400)
+
+    expect(result.body.error).toContain('password must be at least 3 characters')
+
+    const usersAtEnd = await test_helper.usersInDb()
+
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+
+  test('creating a user without giving a password fails', async () => {
+    const usersAtStart = await test_helper.usersInDb()
+
+    const user = {
+      username: "testuser",
+      name: "person"
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(user)
+      .expect(400)
+
+    expect(result.body.error).toContain('no password provided')
+
+    const usersAtEnd = await test_helper.usersInDb()
+
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+
+  test('creating a user without giving a username fails', async () => {
+    const usersAtStart = await test_helper.usersInDb()
+
+    const user = {
+      name: "person",
+      password: "apassword"
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(user)
+      .expect(400)
+
+    expect(result.body.error).toContain('username must be provided')
+
+    const usersAtEnd = await test_helper.usersInDb()
+
     expect(usersAtEnd).toHaveLength(usersAtStart.length)
   })
 })
