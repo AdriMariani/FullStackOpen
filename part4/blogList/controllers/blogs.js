@@ -39,7 +39,18 @@ blogRouter.get('/:id', async (request, response) => {
 })
 
 blogRouter.delete('/:id', async (request, response) => {
-  await Blog.findByIdAndRemove(request.params.id)
+  const decodedToken = jwt.verify(request.token, config.SECRET)
+  const blog = await Blog.findById(request.params.id)
+
+  if(!blog) {
+    return response.status(204).end()
+  } else if(decodedToken.id.toString() !== blog.user.toString()){
+    return response.status(401).json({
+      error: 'user is not authorized to delete this blog'
+    })
+  }
+
+  await blog.remove()
   response.status(204).end()
 })
 
