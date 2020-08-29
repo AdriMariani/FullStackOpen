@@ -55,8 +55,22 @@ blogRouter.delete('/:id', async (request, response) => {
 })
 
 blogRouter.put('/:id', async (request, response) => {
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, request.body, { runValidators: true, new: true, overwrite: true })
-  response.json(updatedBlog)
+  const decodedToken = jwt.verify(request.token, config.SECRET)
+  const blog = await Blog.findById(request.params.id)
+
+  if(!blog) {
+    return response.status(404).end()
+  } else if (decodedToken.id.toString() !== blog.user.toString()){
+    return response.status(401).json({
+      error: 'user is not authorized to update this blog'
+    })
+  }
+
+  request.body.user = blog.user
+  blog.overwrite(request.body)
+  await blog.save()
+  
+  response.json(blog)
 })
 
 module.exports = blogRouter

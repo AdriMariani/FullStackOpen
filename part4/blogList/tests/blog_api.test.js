@@ -247,11 +247,23 @@ describe('updating blogs', () => {
   test('update on blog', async () => {
     const blogs = await testHelper.blogsInDb()
     const blogToUpdate = blogs[0]
+    const dbUser = await testHelper.getDbUser(blogToUpdate.user)
+    const password = testHelper.initialUsers.find(user => user.username === dbUser.username).password
+    
     blogToUpdate.likes = 420
     blogToUpdate.title = 'Updated Blog'
 
+    const login = await api
+      .post('/api/login')
+      .send({
+        username: dbUser.username,
+        password
+      })
+      .expect(200)
+
     await api
       .put(`/api/blogs/${blogToUpdate.id}`)
+      .set('Authorization', `Bearer ${login.body.token}`)
       .send(blogToUpdate)
       .expect(200)
 
