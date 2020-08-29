@@ -30,6 +30,18 @@ describe('getting users', () => {
 
     expect(result.body).toHaveLength(usersInDb.length)
   })
+
+  test('can fetch a specific user', async () => {
+    const users = await test_helper.usersInDb()
+    const user = users[0]
+
+    const result = await api
+      .get(`/api/users/${user.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body.username).toEqual(user.username)
+  })
 })
 
 
