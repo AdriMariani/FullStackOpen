@@ -46,7 +46,7 @@ describe('creating users', () => {
     await api
       .post('/api/users')
       .send(newUser)
-      .expect(200)
+      .expect(201)
       .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await test_helper.usersInDb()
