@@ -2,7 +2,6 @@ import React from 'react'
 
 const BlogForm = props => 
   <div>
-    <h2>Create New Blog</h2>
     <form onSubmit={props.addBlog}>
       <div>
         Title:

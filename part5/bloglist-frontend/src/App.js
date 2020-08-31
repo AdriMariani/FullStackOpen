@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,11 +14,12 @@ const App = () => {
   const [blogTitle, setBlogTitle] = useState('')
   const [blogUrl, setBlogUrl] = useState('')
   const [blogAuthor, setBlogAuthor] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -28,6 +30,11 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  const addNotification = (msg, isError) => {
+    setNotification({ msg, isError })
+    setTimeout(() => setNotification(null), 5000)
+  }
 
   const handleLogin = event => {
     event.preventDefault()
@@ -43,40 +50,52 @@ const App = () => {
         setUsername('')
         setPassword('')
       })
-      .catch(err => alert('Invalid username or password'))
+      .catch(err => addNotification('Invalid username or password', true))
   }
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogAppUser')
     setUser(null)
-  }
-
-  const addBlog = async event => {
-    event.preventDefault()
-
-    const newBlog = await blogService.createBlog({
-      title: blogTitle,
-      author: blogAuthor,
-      url: blogUrl
-    })
-
-    setBlogs(blogs.concat(newBlog))
     setBlogTitle('')
     setBlogAuthor('')
     setBlogUrl('')
   }
 
+  const addBlog = event => {
+    event.preventDefault()
+
+    blogService
+      .createBlog({
+        title: blogTitle,
+        author: blogAuthor,
+        url: blogUrl
+      })
+      .then(newBlog => {
+        setBlogs(blogs.concat(newBlog))
+        addNotification(`${newBlog.title} by ${newBlog.author} added.`, false)
+        setBlogTitle('')
+        setBlogAuthor('')
+        setBlogUrl('')
+      })
+      .catch(err => addNotification(err.response.data.error, true))
+  }
+
   return (
     user === null ?
-      <LoginForm 
-        username={username} 
-        password={password} 
-        setUsername={setUsername}
-        setPassword={setPassword}
-        handleLogin={handleLogin}
-      /> :
+      <>
+        <h2>Login to Application</h2>
+        <Notification notification={notification}/> 
+        <LoginForm 
+          username={username} 
+          password={password} 
+          setUsername={setUsername}
+          setPassword={setPassword}
+          handleLogin={handleLogin}
+        />
+      </> :
       <div>
         <h2>Blogs</h2>
+        <Notification notification={notification}/> 
         <p>
           {`${user.name}  is currently logged in.\t`}
           <button onClick={handleLogout}>logout</button>
@@ -84,6 +103,7 @@ const App = () => {
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
         )}
+        <h2>Create New Blog</h2>
         <BlogForm 
           blogTitle={blogTitle}
           setBlogTitle={setBlogTitle}
