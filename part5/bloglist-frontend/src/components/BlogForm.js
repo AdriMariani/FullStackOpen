@@ -1,31 +1,51 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-const BlogForm = props => 
-  <div>
-    <form onSubmit={props.addBlog}>
-      <div>
-        Title:
-        <input
-          value={props.blogTitle}
-          onChange={event => props.setBlogTitle(event.target.value)}
-        />
-      </div>
-      <div>
-        Author:
-        <input
-          value={props.blogAuthor}
-          onChange={event => props.setBlogAuthor(event.target.value)}
-        />
-      </div>
-      <div>
-        Url:
-        <input
-          value={props.blogUrl}
-          onChange={event => props.setBlogUrl(event.target.value)}
-        />
-      </div>
-      <button type="submit">save</button>
-    </form>
-  </div> 
+const BlogForm = ({ createBlog }) => {
+  const [blogTitle, setBlogTitle] = useState('')
+  const [blogUrl, setBlogUrl] = useState('')
+  const [blogAuthor, setBlogAuthor] = useState('')
+
+  const addBlog = event => {
+    event.preventDefault()
+
+    createBlog({
+      title: blogTitle,
+      author: blogAuthor,
+      url: blogUrl
+    })
+    setBlogTitle('')
+    setBlogAuthor('')
+    setBlogUrl('')
+  }
+
+  return (
+    <div>
+      <form onSubmit={addBlog}>
+        <div>
+          Title:
+          <input
+            value={blogTitle}
+            onChange={event => setBlogTitle(event.target.value)}
+          />
+        </div>
+        <div>
+          Author:
+          <input
+            value={blogAuthor}
+            onChange={event => setBlogAuthor(event.target.value)}
+          />
+        </div>
+        <div>
+          Url:
+          <input
+            value={blogUrl}
+            onChange={event => setBlogUrl(event.target.value)}
+          />
+        </div>
+        <button type="submit">save</button>
+      </form>
+    </div>
+  )
+}
 
 export default BlogForm

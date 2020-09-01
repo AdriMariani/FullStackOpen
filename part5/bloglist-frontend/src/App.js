@@ -12,9 +12,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [blogTitle, setBlogTitle] = useState('')
-  const [blogUrl, setBlogUrl] = useState('')
-  const [blogAuthor, setBlogAuthor] = useState('')
   const [notification, setNotification] = useState(null)
 
   useEffect(() => {
@@ -57,26 +54,14 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogAppUser')
     setUser(null)
-    setBlogTitle('')
-    setBlogAuthor('')
-    setBlogUrl('')
   }
 
-  const addBlog = event => {
-    event.preventDefault()
-
+  const addBlog = blogObject => {
     blogService
-      .createBlog({
-        title: blogTitle,
-        author: blogAuthor,
-        url: blogUrl
-      })
+      .createBlog(blogObject)
       .then(newBlog => {
         setBlogs(blogs.concat(newBlog))
         addNotification(`${newBlog.title} by ${newBlog.author} added.`, false)
-        setBlogTitle('')
-        setBlogAuthor('')
-        setBlogUrl('')
       })
       .catch(err => addNotification(err.response.data.error, true))
   }
@@ -103,15 +88,7 @@ const App = () => {
         </p>
         <Togglable buttonLabel='New Blog'>
           <h2>Create New Blog</h2>
-          <BlogForm 
-            blogTitle={blogTitle}
-            setBlogTitle={setBlogTitle}
-            blogAuthor={blogAuthor}
-            setBlogAuthor={setBlogAuthor}
-            blogUrl={blogUrl}
-            setBlogUrl={setBlogUrl}
-            addBlog={addBlog}
-          />
+          <BlogForm createBlog={addBlog} />
         </Togglable>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
