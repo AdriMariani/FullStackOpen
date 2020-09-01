@@ -66,6 +66,19 @@ const App = () => {
       .catch(err => addNotification(err.response.data.error, true))
   }
 
+  const likeBlog = blogObject => {
+    blogService
+      .updateBlog({
+        ...blogObject,
+        likes: blogObject.likes + 1
+      })
+      .then(updatedBlog => {
+        setBlogs(blogs.map(blog => blog.id !== blogObject.id ? blog : updatedBlog))
+        addNotification(`Successfully liked ${blogObject.title} by ${blogObject.author}.`, false)
+      })
+      .catch(err => addNotification(err.response.data.error, true))
+  }
+
   return (
     user === null ?
       <>
@@ -91,7 +104,7 @@ const App = () => {
           <BlogForm createBlog={addBlog} />
         </Togglable>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} likeBlog={() => likeBlog(blog)} />
         )}
       </div> 
   )
