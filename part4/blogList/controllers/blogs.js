@@ -60,12 +60,8 @@ blogRouter.put('/:id', async (request, response) => {
 
   if(!blog) {
     return response.status(404).end()
-  } else if (decodedToken.id.toString() !== blog.user.toString()){
-    return response.status(401).json({
-      error: 'user is not authorized to update this blog'
-    })
   }
-
+  
   request.body.user = blog.user
   blog.overwrite(request.body)
   await blog.save()
