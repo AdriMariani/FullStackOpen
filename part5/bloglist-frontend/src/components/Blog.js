@@ -1,8 +1,37 @@
-import React from 'react'
-const Blog = ({ blog }) => (
-  <div>
-    {blog.title} - {blog.author}
-  </div>
-)
+import React, { useState } from 'react'
+const Blog = ({ blog }) => {
+  const [hideDetails, setHideDetails] = useState(true)
+
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5
+  }
+  
+  return (
+    <div style={blogStyle}>
+      {hideDetails ?
+        <p>
+          {blog.title}
+          <button onClick={() => setHideDetails(false)}>View</button>
+        </p> :
+        <>
+          <p>
+            {blog.title}
+            <button onClick={() => setHideDetails(true)}>Hide</button>
+          </p>
+          <p>{blog.url}</p>
+          <p>{blog.author}</p>
+          <p>
+            {blog.likes}
+            <button>Like</button>
+          </p>
+        </>
+      }
+    </div>
+  )
+}
 
 export default Blog
