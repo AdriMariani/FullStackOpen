@@ -14,6 +14,8 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState(null)
 
+  const sortedBlogs = [].concat(blogs).sort((a,b) => b.likes - a.likes)
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -103,7 +105,7 @@ const App = () => {
           <h2>Create New Blog</h2>
           <BlogForm createBlog={addBlog} />
         </Togglable>
-        {blogs.map(blog =>
+        {sortedBlogs.map(blog =>
           <Blog key={blog.id} blog={blog} likeBlog={() => likeBlog(blog)} />
         )}
       </div> 
