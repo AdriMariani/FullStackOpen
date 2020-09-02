@@ -22,6 +22,7 @@ blogRouter.post('/', async (request, response) => {
   const savedBlog = await blog.save()
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
+  await savedBlog.populate('user', {username: 1, name: 1}).execPopulate()
 
   response.status(201).json(savedBlog)
 })
@@ -61,7 +62,7 @@ blogRouter.put('/:id', async (request, response) => {
   if(!blog) {
     return response.status(404).end()
   }
-  
+
   request.body.user = blog.user
   blog.overwrite(request.body)
   await blog.save()
