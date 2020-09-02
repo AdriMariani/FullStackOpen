@@ -66,6 +66,7 @@ blogRouter.put('/:id', async (request, response) => {
   request.body.user = blog.user
   blog.overwrite(request.body)
   await blog.save()
+  await blog.populate('user', {username: 1, name: 1}).execPopulate()
   
   response.json(blog)
 })
