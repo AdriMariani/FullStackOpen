@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import './Notification.css'
 
 const Notification = ({ notification }) => {
@@ -7,10 +7,10 @@ const Notification = ({ notification }) => {
   }
 
   return (
-    <div className={notification.isError ? "error" : "success"}>
+    <div className={notification.isError ? 'error' : 'success'}>
       {notification.msg}
     </div>
   )
 }
 
-export default Notification;
+export default Notification

@@ -8,7 +8,7 @@ const LoginForm = ({ handleLogin }) => {
   const onLogin = event => {
     event.preventDefault()
 
-    handleLogin({username, password})
+    handleLogin({ username, password })
     setUsername('')
     setPassword('')
   }
@@ -18,7 +18,7 @@ const LoginForm = ({ handleLogin }) => {
       <form onSubmit={onLogin}>
         <div>
           username
-            <input
+          <input
             type="text"
             value={username}
             name="Username"
@@ -27,7 +27,7 @@ const LoginForm = ({ handleLogin }) => {
         </div>
         <div>
           password
-            <input
+          <input
             type="password"
             value={password}
             name="Password"

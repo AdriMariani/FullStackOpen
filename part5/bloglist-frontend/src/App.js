@@ -44,7 +44,7 @@ const App = () => {
         setUser(userData)
         blogService.setToken(userData.token)
       })
-      .catch(err => addNotification('Invalid username or password', true))
+      .catch(() => addNotification('Invalid username or password', true))
   }
 
   const handleLogout = () => {
@@ -78,12 +78,12 @@ const App = () => {
   const deleteBlog = blogToDelete => {
     if(window.confirm(`Delete ${blogToDelete.title} by ${blogToDelete.author}?`)){
       blogService
-      .deleteBlog(blogToDelete.id)
-      .then(() => {
-        setBlogs(blogs.filter(blog => blog.id !== blogToDelete.id))
-        addNotification(`Successfully deleted ${blogToDelete.title} by ${blogToDelete.author}`, false)
-      })
-      .catch(err => addNotification(err.response.data.error, true))
+        .deleteBlog(blogToDelete.id)
+        .then(() => {
+          setBlogs(blogs.filter(blog => blog.id !== blogToDelete.id))
+          addNotification(`Successfully deleted ${blogToDelete.title} by ${blogToDelete.author}`, false)
+        })
+        .catch(err => addNotification(err.response.data.error, true))
     }
   }
 
@@ -91,12 +91,12 @@ const App = () => {
     user === null ?
       <>
         <h2>Login to Application</h2>
-        <Notification notification={notification}/> 
+        <Notification notification={notification}/>
         <LoginForm handleLogin={handleLogin}/>
       </> :
       <div>
         <h2>Blogs</h2>
-        <Notification notification={notification}/> 
+        <Notification notification={notification}/>
         <p>
           {`${user.name}  is currently logged in.\t`}
           <button onClick={handleLogout}>logout</button>
@@ -106,15 +106,15 @@ const App = () => {
           <BlogForm createBlog={addBlog} />
         </Togglable>
         {sortedBlogs.map(blog =>
-          <Blog 
-            key={blog.id} 
-            blog={blog} 
-            likeBlog={() => likeBlog(blog)} 
+          <Blog
+            key={blog.id}
+            blog={blog}
+            likeBlog={() => likeBlog(blog)}
             showDelete={blog.user.username === user.username}
             deleteBlog={() => deleteBlog(blog)}
           />
         )}
-      </div> 
+      </div>
   )
 }
 
