@@ -81,6 +81,18 @@ const App = () => {
       .catch(err => addNotification(err.response.data.error, true))
   }
 
+  const deleteBlog = blogToDelete => {
+    if(window.confirm(`Delete ${blogToDelete.title} by ${blogToDelete.author}?`)){
+      blogService
+      .deleteBlog(blogToDelete.id)
+      .then(() => {
+        setBlogs(blogs.filter(blog => blog.id !== blogToDelete.id))
+        addNotification(`Successfully deleted ${blogToDelete.title} by ${blogToDelete.author}`, false)
+      })
+      .catch(err => addNotification(err.response.data.error, true))
+    }
+  }
+
   return (
     user === null ?
       <>
@@ -106,7 +118,13 @@ const App = () => {
           <BlogForm createBlog={addBlog} />
         </Togglable>
         {sortedBlogs.map(blog =>
-          <Blog key={blog.id} blog={blog} likeBlog={() => likeBlog(blog)} />
+          <Blog 
+            key={blog.id} 
+            blog={blog} 
+            likeBlog={() => likeBlog(blog)} 
+            showDelete={blog.user.username === user.username}
+            deleteBlog={() => deleteBlog(blog)}
+          />
         )}
       </div> 
   )
