@@ -9,8 +9,6 @@ import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState(null)
 
@@ -36,19 +34,15 @@ const App = () => {
     setTimeout(() => setNotification(null), 5000)
   }
 
-  const handleLogin = event => {
-    event.preventDefault()
-
+  const handleLogin = credentials => {
     loginService
-      .login({ username, password })
+      .login(credentials)
       .then(userData => {
         window.localStorage.setItem(
           'loggedBlogAppUser', JSON.stringify(userData)
         )
         setUser(userData)
         blogService.setToken(userData.token)
-        setUsername('')
-        setPassword('')
       })
       .catch(err => addNotification('Invalid username or password', true))
   }
@@ -98,13 +92,7 @@ const App = () => {
       <>
         <h2>Login to Application</h2>
         <Notification notification={notification}/> 
-        <LoginForm 
-          username={username} 
-          password={password} 
-          setUsername={setUsername}
-          setPassword={setPassword}
-          handleLogin={handleLogin}
-        />
+        <LoginForm handleLogin={handleLogin}/>
       </> :
       <div>
         <h2>Blogs</h2>
