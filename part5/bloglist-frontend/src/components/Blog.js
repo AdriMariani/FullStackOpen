@@ -15,21 +15,21 @@ const Blog = ({ blog, likeBlog, showDelete, deleteBlog }) => {
   return (
     <div style={blogStyle}>
       {hideDetails ?
-        <p>
+        <p className='titleAndAuthor'>
           {blog.title} by {blog.author}
           <button onClick={() => setHideDetails(false)}>View</button>
         </p> :
         <>
-          <p>
+          <p className='titleAndAuthor'>
             {blog.title} by {blog.author}
             <button onClick={() => setHideDetails(true)}>Hide</button>
           </p>
-          <p>{blog.url}</p>
-          <p>
+          <p className='url'>{blog.url}</p>
+          <p className='likes'>
             {blog.likes}
             <button onClick={likeBlog}>Like</button>
           </p>
-          <p>{blog.user.name}</p>
+          <p className='username'>{blog.user.name}</p>
           {showDelete ? <button onClick={deleteBlog}>Delete</button> : ''}
         </>
       }
