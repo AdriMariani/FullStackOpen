@@ -16,20 +16,20 @@ const Blog = ({ blog, likeBlog, showDelete, deleteBlog }) => {
     <div style={blogStyle}>
       {hideDetails ?
         <p>
-          {blog.title}
+          {blog.title} by {blog.author}
           <button onClick={() => setHideDetails(false)}>View</button>
         </p> :
         <>
           <p>
-            {blog.title}
+            {blog.title} by {blog.author}
             <button onClick={() => setHideDetails(true)}>Hide</button>
           </p>
           <p>{blog.url}</p>
-          <p>{blog.author}</p>
           <p>
             {blog.likes}
             <button onClick={likeBlog}>Like</button>
           </p>
+          <p>{blog.user.name}</p>
           {showDelete ? <button onClick={deleteBlog}>Delete</button> : ''}
         </>
       }
