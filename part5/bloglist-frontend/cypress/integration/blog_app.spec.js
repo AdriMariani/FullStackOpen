@@ -61,5 +61,34 @@ describe('Blog app', function() {
       cy.get('.titleAndAuthor')
         .should('contain', `${blog.title} by ${blog.author}`)
     })
+
+    describe('and several blogs exist', function() {
+      const blogOne = {
+        title: 'blog1',
+        author: 'tester',
+        url: 'http://www.blogs.ca',
+        likes: 2
+      }
+      const blogTwo = {
+        title: 'blog2',
+        author: 'tester',
+        url: 'http://www.blogs.ca',
+        likes: 10
+      }
+
+      beforeEach(function() {
+        cy.createBlog(blogOne)
+        cy.createBlog(blogTwo)
+      })
+
+      it('can like a blog', function() {
+        cy.contains(`${blogTwo.title} by ${blogTwo.author}`).parent().as('blog')
+
+        cy.get('@blog').contains('View').click()
+        cy.get('@blog').contains('Like').click()
+
+        cy.get('.likes').contains(`${blogTwo.likes + 1}`)
+      })
+    })
   })
 })
