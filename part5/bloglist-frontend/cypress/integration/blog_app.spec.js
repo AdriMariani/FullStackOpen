@@ -64,7 +64,7 @@ describe('Blog app', function() {
       cy.get('#url').type(blog.url)
       cy.contains('save').click()
 
-      cy.get('.titleAndAuthor')
+      cy.get('#blogList')
         .should('contain', `${blog.title} by ${blog.author}`)
     })
 
@@ -81,10 +81,17 @@ describe('Blog app', function() {
         url: 'http://www.blogs.ca',
         likes: 10
       }
+      const blogThree = {
+        title: 'blog3',
+        author: 'tester',
+        url: 'http://www.blogs.ca',
+        likes: 100
+      }
 
       beforeEach(function() {
         cy.createBlog(blogOne)
         cy.createBlog(blogTwo)
+        cy.createBlog(blogThree)
       })
 
       it('can like a blog', function() {
@@ -107,7 +114,7 @@ describe('Blog app', function() {
           .and('have.css', 'color', 'rgb(0, 128, 0)')
           .and('have.css', 'border-style', 'solid')
 
-        cy.get('html', { timeout: 6000 }) //must wait for notification to disappear
+        cy.get('#blogList')
           .should('not.contain', `${blogOne.title} by ${blogOne.author}`)
       })
 
@@ -118,6 +125,23 @@ describe('Blog app', function() {
 
         cy.get('@blog').contains('View').click()
         cy.get('@blog').should('not.contain', 'Delete')
+      })
+
+      it('blogs are listed from most to least likes', function() {
+        let inOrder = true
+        let prev = null
+
+        cy.get('#blogList').find('button').each(button => {
+          button.click()
+        })
+
+        cy.get('#blogList').find('.likes')
+          .each(likes => {
+            const numOfLikes = parseInt(likes[0].innerText.match(/\d+/))
+            inOrder = prev ? numOfLikes <= prev : true
+            prev = numOfLikes
+          })
+          .then(() => expect(inOrder).to.be.true)
       })
     })
   })
