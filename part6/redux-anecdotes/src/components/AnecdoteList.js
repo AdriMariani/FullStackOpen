@@ -7,9 +7,17 @@ import { setNotification, removeNotification } from '../reducers/notificationRed
 const AnecdoteList = props => {
   const [currentTimeout, setCurrentTimeout] = useState(null)
   const anecdotes = useSelector(state => state.anecdotes)
+  const filter = useSelector(state => state.filter.toLowerCase())
   const dispatch = useDispatch()
+  let sortedAnecdotes
 
-  const sortedAnecdotes = [].concat(anecdotes).sort((a,b) => b.votes - a.votes)
+  if(filter !== '') {
+    sortedAnecdotes = [].concat(anecdotes)
+      .filter(anecdote => anecdote.content.toLowerCase().startsWith(filter))
+      .sort((a,b) => b.votes - a.votes)
+  } else {
+    sortedAnecdotes = [].concat(anecdotes).sort((a,b) => b.votes - a.votes)
+  }
 
   const handleVote = anecdote => {
     return () => {
