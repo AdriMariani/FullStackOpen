@@ -4,7 +4,7 @@ import Anecdote from './Anecdote'
 import { vote } from '../reducers/anecdoteReducer'
 
 const AnecdoteList = props => {
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(state => state.anecdotes)
   const dispatch = useDispatch()
 
   const sortedAnecdotes = [].concat(anecdotes).sort((a,b) => b.votes - a.votes)
