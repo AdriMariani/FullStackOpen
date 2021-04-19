@@ -26,7 +26,7 @@ const AnecdoteList = props => {
         // the timeout should be cleared so the new notification will stay on
         clearTimeout(currentTimeout)
       }
-      dispatch(vote(anecdote.id))
+      dispatch(vote(anecdote))
       dispatch(setNotification(`You Voted "${anecdote.content}"`))
       setCurrentTimeout(setTimeout(() => dispatch(removeNotification()), 5000))
     }
