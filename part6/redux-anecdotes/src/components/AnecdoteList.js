@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Anecdote from './Anecdote'
 import { vote } from '../reducers/anecdoteReducer'
-import { setNotification, removeNotification } from '../reducers/notificationReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
 const AnecdoteList = props => {
-  const [currentTimeout, setCurrentTimeout] = useState(null)
   const anecdotes = useSelector(state => state.anecdotes)
   const filter = useSelector(state => state.filter.toLowerCase())
   const dispatch = useDispatch()
@@ -21,14 +20,8 @@ const AnecdoteList = props => {
 
   const handleVote = anecdote => {
     return () => {
-      if (currentTimeout) {
-        // if another vote is made while a notification is on screen
-        // the timeout should be cleared so the new notification will stay on
-        clearTimeout(currentTimeout)
-      }
       dispatch(vote(anecdote))
-      dispatch(setNotification(`You Voted "${anecdote.content}"`))
-      setCurrentTimeout(setTimeout(() => dispatch(removeNotification()), 5000))
+      dispatch(setNotification(`You Voted "${anecdote.content}"`, 5))
     }
   }
 
