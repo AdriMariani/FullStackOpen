@@ -72,9 +72,9 @@ const Notification = ({ notification }) => (
 )
 
 const CreateNew = (props) => {
-  const content = useField('text', 'content')
-  const author = useField('text', 'author')
-  const info = useField('text', 'info')
+  const [content, resetContent] = useField('text', 'content')
+  const [author, resetAuthor] = useField('text', 'author')
+  const [info, resetInfo] = useField('text', 'info')
 
   const handleSubmit = e => {
     e.preventDefault()
@@ -87,9 +87,9 @@ const CreateNew = (props) => {
   }
 
   const reset = e => {
-    content.reset()
-    author.reset()
-    info.reset()
+    resetContent()
+    resetAuthor()
+    resetInfo()
   }
 
   return (
