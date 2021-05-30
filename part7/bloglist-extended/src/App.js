@@ -7,6 +7,9 @@ import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogList from './components/BlogList'
+import { Switch, Route, Link } from 'react-router-dom'
+import Users from './components/Users'
+import { setUsers } from './reducers/blogUsersReducer'
 
 const App = () => {
   const user = useSelector(state => state.user)
@@ -14,6 +17,10 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initBlogs())
+  }, [])
+
+  useEffect(() => {
+    dispatch(setUsers())
   }, [])
 
   useEffect(() => {
@@ -38,16 +45,25 @@ const App = () => {
       </> :
       <div>
         <h2>Blogs</h2>
+        <Link to='/blogs'>Blogs</Link>
+        <Link to='/users'>Users</Link>
         <Notification />
         <p>
           {`${user.name}  is currently logged in.\t`}
           <button onClick={handleLogout}>logout</button>
         </p>
-        <Togglable buttonLabel='New Blog'>
-          <h2>Create New Blog</h2>
-          <BlogForm />
-        </Togglable>
-        <BlogList />
+        <Switch>
+          <Route path='/users'>
+            <Users />
+          </Route>
+          <Route path={['/blogs', '']}>
+            <Togglable buttonLabel='New Blog'>
+              <h2>Create New Blog</h2>
+              <BlogForm />
+            </Togglable>
+            <BlogList />
+          </Route>
+        </Switch>
       </div>
   )
 }
