@@ -10,6 +10,7 @@ import BlogList from './components/BlogList'
 import { Switch, Route, Link } from 'react-router-dom'
 import Users from './components/Users'
 import { setUsers } from './reducers/blogUsersReducer'
+import UserView from './components/UserView'
 
 const App = () => {
   const user = useSelector(state => state.user)
@@ -53,6 +54,9 @@ const App = () => {
           <button onClick={handleLogout}>logout</button>
         </p>
         <Switch>
+          <Route path="/users/:username">
+            <UserView />
+          </Route>
           <Route path='/users'>
             <Users />
           </Route>
