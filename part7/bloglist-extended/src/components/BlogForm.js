@@ -1,22 +1,26 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
+import { useDispatch } from 'react-redux'
+import { createBlog } from '../reducers/blogReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
-const BlogForm = ({ createBlog }) => {
-  const [blogTitle, setBlogTitle] = useState('')
-  const [blogUrl, setBlogUrl] = useState('')
-  const [blogAuthor, setBlogAuthor] = useState('')
+const BlogForm = () => {
+  const dispatch = useDispatch()
 
   const addBlog = event => {
     event.preventDefault()
-
-    createBlog({
-      title: blogTitle,
-      author: blogAuthor,
-      url: blogUrl
-    })
-    setBlogTitle('')
-    setBlogAuthor('')
-    setBlogUrl('')
+    let title = event.target.title
+    let author = event.target.author
+    let url = event.target.url
+    dispatch(createBlog({
+      title: title.value,
+      author: author.value,
+      url: url.value
+    })).then(newBlog => {
+      dispatch(setNotification(`${newBlog.title} by ${newBlog.author} added.`, false, 10))
+      title.value = ''
+      author.value = ''
+      url.value = ''
+    }).catch(error => dispatch(setNotification(error.response.data.error, true, 10)))
   }
 
   return (
@@ -24,27 +28,15 @@ const BlogForm = ({ createBlog }) => {
       <form onSubmit={addBlog}>
         <div>
           Title:
-          <input
-            id='title'
-            value={blogTitle}
-            onChange={event => setBlogTitle(event.target.value)}
-          />
+          <input name='title' />
         </div>
         <div>
           Author:
-          <input
-            id='author'
-            value={blogAuthor}
-            onChange={event => setBlogAuthor(event.target.value)}
-          />
+          <input name='author' />
         </div>
         <div>
           Url:
-          <input
-            id='url'
-            value={blogUrl}
-            onChange={event => setBlogUrl(event.target.value)}
-          />
+          <input name='url' />
         </div>
         <button type="submit">save</button>
       </form>
@@ -52,8 +44,9 @@ const BlogForm = ({ createBlog }) => {
   )
 }
 
-BlogForm.propTypes = {
-  createBlog: PropTypes.func.isRequired
-}
+// no longer takes props
+// BlogForm.propTypes = {
+//   createBlog: PropTypes.func.isRequired
+// }
 
 export default BlogForm

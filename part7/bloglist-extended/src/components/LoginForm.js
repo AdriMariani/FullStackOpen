@@ -1,16 +1,24 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
+import { useDispatch } from 'react-redux'
+import { setNotification } from '../reducers/notificationReducer'
+import { setUser } from '../reducers/userReducer'
+import loginService from '../services/login'
+// import PropTypes from 'prop-types'
 
-const LoginForm = ({ handleLogin }) => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+const LoginForm = () => {
+  const dispatch = useDispatch()
 
-  const onLogin = event => {
+  const onLogin = async event => {
     event.preventDefault()
-
-    handleLogin({ username, password })
-    setUsername('')
-    setPassword('')
+    loginService.login({
+      username: event.target.username.value,
+      password: event.target.password.value
+    }).then(userData => {
+      window.localStorage.setItem(
+        'loggedBlogAppUser', JSON.stringify(userData)
+      )
+      dispatch(setUser(userData))
+    }).catch(() => dispatch(setNotification('Invalid username or password', true, 10)))
   }
 
   return (
@@ -19,19 +27,15 @@ const LoginForm = ({ handleLogin }) => {
         <div>
           username
           <input
-            id="username"
+            name="username"
             type="text"
-            value={username}
-            onChange={({ target }) => setUsername(target.value)}
           />
         </div>
         <div>
           password
           <input
-            id="password"
+            name="password"
             type="password"
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
           />
         </div>
         <button id='loginButton' type="submit">login</button>
@@ -40,8 +44,9 @@ const LoginForm = ({ handleLogin }) => {
   )
 }
 
-LoginForm.propTypes = {
-  handleLogin: PropTypes.func.isRequired
-}
+// component no longer has props
+// LoginForm.propTypes = {
+//   handleLogin: PropTypes.func.isRequired
+// }
 
 export default LoginForm
