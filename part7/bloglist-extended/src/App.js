@@ -11,6 +11,7 @@ import { Switch, Route, Link } from 'react-router-dom'
 import Users from './components/Users'
 import { setUsers } from './reducers/blogUsersReducer'
 import UserView from './components/UserView'
+import Blog from './components/Blog'
 
 const App = () => {
   const user = useSelector(state => state.user)
@@ -54,8 +55,11 @@ const App = () => {
           <button onClick={handleLogout}>logout</button>
         </p>
         <Switch>
-          <Route path="/users/:username">
+          <Route path='/users/:username'>
             <UserView />
+          </Route>
+          <Route path='/blogs/:blogId'>
+            <Blog />
           </Route>
           <Route path='/users'>
             <Users />
