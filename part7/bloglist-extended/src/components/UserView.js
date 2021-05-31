@@ -27,7 +27,7 @@ const UserView = () => {
       <ul>
         {
           user.blogs.map(blog =>
-            <li key={user.id}>
+            <li key={blog.id}>
               {blog.title}
             </li>
           )

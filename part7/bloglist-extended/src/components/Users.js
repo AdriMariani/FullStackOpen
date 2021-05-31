@@ -13,20 +13,22 @@ const Users = () => {
     <div>
       <h2>Users</h2>
       <table>
-        <tr>
-          <td></td>
-          <td><strong>Blogs Created</strong></td>
-        </tr>
-        {
-          users.map(user =>
-            <tr key={user.id}>
-              <td>
-                <Link to={`/users/${user.username}`}>{user.name}</Link>
-              </td>
-              <td>{user.blogs.length}</td>
-            </tr>
-          )
-        }
+        <tbody>
+          <tr>
+            <td></td>
+            <td><strong>Blogs Created</strong></td>
+          </tr>
+          {
+            users.map(user =>
+              <tr key={user.id}>
+                <td>
+                  <Link to={`/users/${user.username}`}>{user.name}</Link>
+                </td>
+                <td>{user.blogs.length}</td>
+              </tr>
+            )
+          }
+        </tbody>
       </table>
     </div>
   )
