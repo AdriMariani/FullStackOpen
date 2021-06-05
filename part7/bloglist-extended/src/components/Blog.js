@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 import { setNotification } from '../reducers/notificationReducer'
 import { deleteBlog, likeBlog } from '../reducers/blogReducer'
 // import PropTypes from 'prop-types'
@@ -8,6 +8,7 @@ import { deleteBlog, likeBlog } from '../reducers/blogReducer'
 const Blog = () => {
   const dispatch = useDispatch()
   const { blogId } = useParams()
+  const history = useHistory()
   const blog = useSelector(state => state.blogs.find(blog => blog.id === blogId))
   const user = useSelector(state => state.user)
 
@@ -30,6 +31,7 @@ const Blog = () => {
       dispatch(deleteBlog(blog.id))
         .then(() => {
           dispatch(setNotification(`Successfully deleted ${blog.title} by ${blog.author}`, false, 10))
+          history.push('/')
         })
         .catch(error => dispatch(setNotification(error.response.data.error, true, 10)))
     }
