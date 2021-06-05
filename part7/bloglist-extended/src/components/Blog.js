@@ -15,7 +15,7 @@ const Blog = () => {
     return null
   }
 
-  const showDelete = user.id === blog.user
+  const showDelete = user.username === blog.user.username
 
   const likeBlogHandler = () => {
     dispatch(likeBlog(blog))
