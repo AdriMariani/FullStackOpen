@@ -27,6 +27,19 @@ blogRouter.post('/', async (request, response) => {
   response.status(201).json(savedBlog)
 })
 
+blogRouter.post('/:id/comments', async (request, response) => {
+  const blog = await Blog.findById(request.params.id)
+  if (!request.body.comment) {
+    return response.status(400).end()
+  }
+  blog.overwrite({
+    ...blog.toObject(),
+    comments: blog.comments.concat(request.body.comment)
+  })
+  await blog.save()
+  response.status(201).end()
+})
+
 blogRouter.get('/:id', async (request, response) => {
   const blog = await Blog
     .findById(request.params.id)

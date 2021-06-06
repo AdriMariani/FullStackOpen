@@ -17,6 +17,14 @@ const blogReducer = (state = [], action) => {
     }
     case 'CREATE_BLOG':
       return [...state, action.data.newBlog]
+    case 'ADD_COMMENT': {
+      const blog = state.find(b => b.id === action.data.id)
+      const changedBlog = {
+        ...blog,
+        comments: blog.comments.concat(action.data.comment)
+      }
+      return state.map(b => b.id === action.data.id ? changedBlog : b)
+    }
     case 'INIT_BLOGS':
       return action.data.blogs
     default:
@@ -75,6 +83,19 @@ export const deleteBlog = id => {
       type: 'DELETE_BLOG',
       data: {
         id
+      }
+    })
+  }
+}
+
+export const commentBlog = (id, comment) => {
+  return async dispatch => {
+    await blogService.comment(id, comment)
+    dispatch({
+      type: 'ADD_COMMENT',
+      data: {
+        id,
+        comment
       }
     })
   }

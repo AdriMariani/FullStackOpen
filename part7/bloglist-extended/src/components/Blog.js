@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router'
 import { setNotification } from '../reducers/notificationReducer'
-import { deleteBlog, likeBlog } from '../reducers/blogReducer'
+import { commentBlog, deleteBlog, likeBlog } from '../reducers/blogReducer'
 // import PropTypes from 'prop-types'
 
 const Blog = () => {
@@ -37,6 +37,17 @@ const Blog = () => {
     }
   }
 
+  const commentBlogHandler = event => {
+    event.preventDefault()
+    const comment = event.target.comment
+    dispatch(commentBlog(blog.id, comment.value))
+      .then(() => {
+        dispatch(setNotification(`Comment "${comment.value}" successfully added`, false, 10))
+        comment.value = ''
+      })
+      .catch(error => dispatch(setNotification(error.response.data.error, true, 10)))
+  }
+
   return (
     <div>
       <h2>
@@ -49,6 +60,22 @@ const Blog = () => {
       </p>
       <p className='username'>Added By {blog.user.name}</p>
       {showDelete ? <button onClick={deleteBlogHandler}>Delete</button> : ''}
+      <div>
+        <h3>Comments</h3>
+        <form onSubmit={commentBlogHandler}>
+          <input name="comment"></input>
+          <button type="submit">Add Comment</button>
+        </form>
+        <ul>
+          {
+            blog.comments.map((comment, index) =>
+              <li key={`${comment}${index}`}>
+                {comment}
+              </li>
+            )
+          }
+        </ul>
+      </div>
     </div>
   )
 }
