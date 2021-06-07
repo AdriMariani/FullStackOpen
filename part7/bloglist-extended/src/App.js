@@ -13,6 +13,7 @@ import { setUsers } from './reducers/blogUsersReducer'
 import UserView from './components/UserView'
 import Blog from './components/Blog'
 import NavBar from './components/NavBar'
+import './App.css'
 
 const App = () => {
   const user = useSelector(state => state.user)
@@ -36,14 +37,13 @@ const App = () => {
 
   return (
     user === null ?
-      <>
+      <div className='container'>
         <h2>Login to Application</h2>
         <Notification />
         <LoginForm />
-      </> :
-      <div>
+      </div> :
+      <div className='container'>
         <NavBar />
-        <h2>Blog App</h2>
         <Notification />
         <Switch>
           <Route path='/users/:username'>
@@ -57,7 +57,7 @@ const App = () => {
           </Route>
           <Route path={['/blogs', '']}>
             <Togglable buttonLabel='New Blog'>
-              <h2>Create New Blog</h2>
+              <h3>Create New Blog</h3>
               <BlogForm />
             </Togglable>
             <BlogList />

@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 import { setUser } from '../reducers/userReducer'
 import loginService from '../services/login'
+import { Form, Button } from 'react-bootstrap'
 // import PropTypes from 'prop-types'
 
 const LoginForm = () => {
@@ -23,23 +24,23 @@ const LoginForm = () => {
 
   return (
     <div>
-      <form id='loginForm' onSubmit={onLogin}>
-        <div>
-          username
-          <input
+      <Form id='loginForm' onSubmit={onLogin}>
+        <Form.Group>
+          <Form.Label>Username</Form.Label>
+          <Form.Control
             name="username"
             type="text"
           />
-        </div>
-        <div>
-          password
-          <input
+          <Form.Label>Password</Form.Label>
+          <Form.Control
             name="password"
             type="password"
           />
-        </div>
-        <button id='loginButton' type="submit">login</button>
-      </form>
+          <Button id='loginButton' variant="primary" type="submit">
+            Login
+          </Button>
+        </Form.Group>
+      </Form>
     </div>
   )
 }

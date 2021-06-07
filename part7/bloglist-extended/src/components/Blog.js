@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router'
 import { setNotification } from '../reducers/notificationReducer'
 import { commentBlog, deleteBlog, likeBlog } from '../reducers/blogReducer'
+import { Button, Form, Table } from 'react-bootstrap'
 // import PropTypes from 'prop-types'
 
 const Blog = () => {
@@ -21,7 +22,7 @@ const Blog = () => {
   const likeBlogHandler = () => {
     dispatch(likeBlog(blog))
       .then(() => {
-        dispatch(setNotification(`Successfully liked ${blog.title} by ${blog.author}.`, false, 10))
+        dispatch(setNotification(`Successfully liked "${blog.title}" by ${blog.author}.`, false, 10))
       })
       .catch(error => dispatch(setNotification(error.response.data.error, true, 10)))
   }
@@ -30,7 +31,7 @@ const Blog = () => {
     if (window.confirm(`Delete ${blog.title} by ${blog.author}?`)) {
       dispatch(deleteBlog(blog.id))
         .then(() => {
-          dispatch(setNotification(`Successfully deleted ${blog.title} by ${blog.author}`, false, 10))
+          dispatch(setNotification(`Successfully deleted "${blog.title}" by ${blog.author}`, false, 10))
           history.push('/')
         })
         .catch(error => dispatch(setNotification(error.response.data.error, true, 10)))
@@ -50,22 +51,38 @@ const Blog = () => {
 
   return (
     <div>
-      <h2>
-        {blog.title}
-      </h2>
-      <a href={blog.url}>{blog.url}</a>
-      <p className='likes'>
-        {blog.likes} likes
-        <button onClick={likeBlogHandler}>Like</button>
-      </p>
-      <p className='username'>Added By {blog.user.name}</p>
-      {showDelete ? <button onClick={deleteBlogHandler}>Delete</button> : ''}
+      <Table>
+        <tbody>
+          <tr>
+            <td><strong>Title</strong></td>
+            <td>{blog.title}</td>
+          </tr>
+          <tr>
+            <td><strong>Url</strong></td>
+            <td><a href={blog.url}>{blog.url}</a></td>
+          </tr>
+          <tr>
+            <td><strong>Author</strong></td>
+            <td>{blog.author}</td>
+          </tr>
+          <tr>
+            <td><strong>Added By</strong></td>
+            <td>{blog.user.name}</td>
+          </tr>
+          <tr>
+            <td><strong>Likes</strong></td>
+            <td>{blog.likes} likes</td>
+          </tr>
+        </tbody>
+      </Table>
+      <Button onClick={likeBlogHandler}>Like</Button>
+      {showDelete ? <Button variant='danger' onClick={deleteBlogHandler}>Delete</Button> : ''}
       <div>
         <h3>Comments</h3>
-        <form onSubmit={commentBlogHandler}>
-          <input name="comment"></input>
-          <button type="submit">Add Comment</button>
-        </form>
+        <Form onSubmit={commentBlogHandler}>
+          <Form.Control type='text' name="comment" />
+          <Button type="submit">Add Comment</Button>
+        </Form>
         <ul>
           {
             blog.comments.map((comment, index) =>
