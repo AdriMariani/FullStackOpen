@@ -3,9 +3,11 @@ import React, { useState } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
+import ErrorMessage from './components/ErrorMessage'
 
 const App = () => {
   const [page, setPage] = useState('authors')
+  const [error, setError] = useState(null)
 
   return (
     <div>
@@ -14,6 +16,8 @@ const App = () => {
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
       </div>
+
+      <ErrorMessage errorMessage={error} />
 
       <Authors
         show={page === 'authors'}
@@ -25,6 +29,7 @@ const App = () => {
 
       <NewBook
         show={page === 'add'}
+        setError={setError}
       />
 
     </div>

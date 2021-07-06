@@ -18,9 +18,25 @@ query {
     title
     published
     author {
-      name,
+      name
       born
+      bookCount
     }
+    genres
+  }
+}
+`
+
+export const ADD_BOOK = gql`
+mutation newBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
+  addBook(title: $title, author: $author, published: $published, genres: $genres) {
+    title
+    author {
+      name
+      born
+      bookCount
+    }
+    published
     genres
   }
 }
