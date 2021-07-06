@@ -10,3 +10,18 @@ query {
   }
 }
 `
+
+export const ALL_BOOKS =gql`
+query {
+  allBooks {
+    id
+    title
+    published
+    author {
+      name,
+      born
+    }
+    genres
+  }
+}
+`
