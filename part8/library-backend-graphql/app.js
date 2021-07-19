@@ -52,31 +52,26 @@ const typeDefs = gql`
 `
 
 const resolvers = {
-  Book: {
-    author: (root) => {
-      // assuming that author names are unique here
-      return authors.find(author => author.name === root.author)
-    }
-  },
   Author: {
-    bookCount: (root) => {
-      return books.filter(book => book.author === root.name).length
+    bookCount: async (root) => {
+      const books = await Book.find({ author: root.id })
+      return books.length
     }
   },
   Query: {
-    allBooks: (root, args) => {
-      if (!args.author && !args.genre) {
-        return Book.find({})
-      }
-      return books.filter(book => {
-        if (!args.genre) {
-          return book.author === args.author
-        } else if (!args.author) {
-          return book.genres.includes(args.genre)
-        } else {
-          return book.author === args.author && book.genres.includes(args.genre)
+    allBooks: async (root, args) => {
+      let filter = {}
+      if (args.author) {
+        const author = await Author.findOne({ name: args.author })
+        if (!author) {
+          return [] // if author isn't found then clearly there's no books with their name
         }
-      })
+        filter.author = author.id
+      } 
+      if (args.genre) {
+        filter.genres = { $in: [args.genre] }
+      }
+      return Book.find(filter).populate('author')
     },
     allAuthors: () => Author.find({}),
     bookCount: () => Book.collection.countDocuments(),
@@ -92,14 +87,13 @@ const resolvers = {
       const newBook = new Book({ ...args, author })
       return newBook.save()
     },
-    editAuthor: (root, args) => {
-      const authorToEdit = authors.find(author => author.name === args.name)
+    editAuthor: async (root, args) => {
+      const authorToEdit = await Author.findOne({ name: args.name })
       if (!authorToEdit) {
         return null
       }
-      const editedAuthor = { ...authorToEdit, born: args.setBornTo }
-      authors = authors.map(author => author.name === args.name ? editedAuthor : author)
-      return editedAuthor
+      authorToEdit.born = args.setBornTo
+      return authorToEdit.save()
     }
   }
 }
