@@ -6,7 +6,9 @@ const EditAuthor = (props) => {
   const [author, setAuthor] = useState('')
   const [born, setBorn] = useState('')
 
-  const [editAuthor] = useMutation(EDIT_AUTHOR)
+  const [editAuthor] = useMutation(EDIT_AUTHOR, {
+    onError: error => props.setError(error.graphQLErrors[0].message)
+  })
   const results = useQuery(ALL_AUTHORS)
 
   useEffect(() => {
@@ -15,8 +17,16 @@ const EditAuthor = (props) => {
     }
   }, [results])
 
+  if (!props.show) {
+    return null
+  }
+
   const submit = (event) => {
     event.preventDefault()
+
+    if (!born) {
+      props.setError('Please select a year before submitting')
+    }
 
     editAuthor({
       variables: { author, born: Number(born) }
@@ -24,6 +34,10 @@ const EditAuthor = (props) => {
 
     setAuthor(results.data.allAuthors[0].name)
     setBorn('')
+  }
+
+  if (results.loading) {
+    return <div>loading...</div>
   }
 
   return (
