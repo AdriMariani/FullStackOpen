@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
@@ -7,6 +6,7 @@ import ErrorMessage from './components/ErrorMessage'
 import { useApolloClient } from '@apollo/client'
 import LoginForm from './components/LoginForm'
 import EditAuthor from './components/EditAuthor'
+import Recommend from './components/Recommend'
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -28,6 +28,11 @@ const App = () => {
     setPage('login')
   }
 
+  const onError = error => {
+    setError(error)
+    setTimeout(() => setError(null), 5000)
+  }
+
   return (
     <div>
       <div>
@@ -37,6 +42,7 @@ const App = () => {
           token ?
             <>
               <button onClick={() => setPage('add')}>add book</button>
+              <button onClick={() => setPage('recommend')}>recommend</button>
               <button onClick={() => logout()}>logout</button>
             </>
           : <button onClick={() => setPage('login')}>login</button>
@@ -50,7 +56,7 @@ const App = () => {
       />
       <EditAuthor
         show={page === 'authors' && token}
-        setError={setError}
+        setError={onError}
       />
 
       <Books
@@ -59,12 +65,17 @@ const App = () => {
 
       <NewBook
         show={page === 'add'}
-        setError={setError}
+        setError={onError}
+        setPage={setPage}
+      />
+
+      <Recommend 
+        show={page === 'recommend'}
       />
 
       <LoginForm 
         show={page === 'login'}
-        setError={setError}
+        setError={onError}
         setToken={setToken}
         setPage={setPage}
       />
