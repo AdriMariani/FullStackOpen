@@ -4,7 +4,10 @@ const Author = require('./models/Author')
 const Book = require('./models/Book')
 const User = require('./models/User')
 const jwt = require('jsonwebtoken')
+const { PubSub } = require('graphql-subscriptions')
 require('dotenv').config()
+
+const pubsub = new PubSub()
 
 const MONGO_DB_URI = process.env.MONGO_DB_URI
 const SECRET = process.env.SECRET
@@ -71,6 +74,10 @@ const typeDefs = gql`
       password: String!
     ): Token
   }
+
+  type Subscription {
+    bookAdded: Book!
+  }
 `
 
 const resolvers = {
@@ -112,6 +119,7 @@ const resolvers = {
           await author.save()
         }
         const newBook = new Book({ ...args, author })
+        pubsub.publish('BOOK_ADDED', { bookAdded: newBook })
         return newBook.save()
       } catch (error) {
         throw new UserInputError(error.message, {
@@ -161,6 +169,11 @@ const resolvers = {
   
       return { value: jwt.sign(userForToken, SECRET) }
     }
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
+    },
   }
 }
 
@@ -179,6 +192,7 @@ const server = new ApolloServer({
   }
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })
