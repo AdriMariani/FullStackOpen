@@ -7,7 +7,7 @@ const EditAuthor = (props) => {
   const [born, setBorn] = useState('')
 
   const [editAuthor] = useMutation(EDIT_AUTHOR, {
-    onError: error => props.setError(error.graphQLErrors[0].message)
+    onError: error => props.notify(error.graphQLErrors[0].message, true)
   })
   const results = useQuery(ALL_AUTHORS)
 
@@ -25,7 +25,7 @@ const EditAuthor = (props) => {
     event.preventDefault()
 
     if (!born) {
-      props.setError('Please select a year before submitting')
+      props.notify('Please select a year before submitting', true)
     }
 
     editAuthor({
