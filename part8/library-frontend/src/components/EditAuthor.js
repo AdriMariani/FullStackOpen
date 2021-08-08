@@ -12,7 +12,7 @@ const EditAuthor = (props) => {
   const results = useQuery(ALL_AUTHORS)
 
   useEffect(() => {
-    if (!results.loading) {
+    if (!results.loading && results.data.allAuthors.length > 0) {
       setAuthor(results.data.allAuthors[0].name)
     }
   }, [results])
