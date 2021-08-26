@@ -8,32 +8,32 @@ interface ExerciseResults {
     average: number
 }
 
-interface ExerciseArguments {
-    dailyHours: Array<number>,
-    target: number
-}
+// interface ExerciseArguments {
+//     dailyHours: Array<number>,
+//     target: number
+// }
 
-function parseArguments(args: Array<string>): ExerciseArguments {
-    if (args.length < 4) throw new Error('Not enough arguments');
+// function parseArguments(args: Array<string>): ExerciseArguments {
+//     if (args.length < 4) throw new Error('Not enough arguments');
 
-    const target = Number(args[2]);
+//     const target = Number(args[2]);
 
-    if (isNaN(target)) throw new Error('Target must be a number!');
+//     if (isNaN(target)) throw new Error('Target must be a number!');
 
-    const dailyHours = args.slice(3).map(hours => {
-        const numHours = Number(hours);
-        if (isNaN(numHours)) {
-            throw new Error('Provided values were not all numbers!');
-        } else {
-            return numHours;
-        }
-    });
+//     const dailyHours = args.slice(3).map(hours => {
+//         const numHours = Number(hours);
+//         if (isNaN(numHours)) {
+//             throw new Error('Provided values were not all numbers!');
+//         } else {
+//             return numHours;
+//         }
+//     });
 
-    return {
-        dailyHours,
-        target
-    };
-}
+//     return {
+//         dailyHours,
+//         target
+//     };
+// }
 
 function calculateExercises(dailyHours: Array<number>, target: number): ExerciseResults {
     const average = dailyHours.reduce((acc, value) => acc + value, 0) / dailyHours.length;
@@ -60,9 +60,11 @@ function calculateExercises(dailyHours: Array<number>, target: number): Exercise
     };
 }
 
-try {
-    const { dailyHours, target } = parseArguments(process.argv);
-    console.log(calculateExercises(dailyHours, target));
-} catch (error) {
-    console.log((<Error>error).message);
-}
+export default calculateExercises;
+
+// try {
+//     const { dailyHours, target } = parseArguments(process.argv);
+//     console.log(calculateExercises(dailyHours, target));
+// } catch (error) {
+//     console.log((<Error>error).message);
+// }
