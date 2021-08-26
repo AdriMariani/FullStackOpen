@@ -32,7 +32,7 @@ function parseArguments(args: Array<string>): ExerciseArguments {
     return {
         dailyHours,
         target
-    }
+    };
 }
 
 function calculateExercises(dailyHours: Array<number>, target: number): ExerciseResults {
@@ -57,12 +57,12 @@ function calculateExercises(dailyHours: Array<number>, target: number): Exercise
         ratingDescription,
         target,
         average
-    }
+    };
 }
 
 try {
     const { dailyHours, target } = parseArguments(process.argv);
     console.log(calculateExercises(dailyHours, target));
 } catch (error) {
-    console.log(error.message);
+    console.log((<Error>error).message);
 }
