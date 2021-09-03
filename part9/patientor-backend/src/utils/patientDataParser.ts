@@ -9,9 +9,9 @@ function isGender(param: any): param is Gender {
   return Object.values(Gender).includes(param);
 }
 
-const isDate = (date: string): boolean => {
+function isDate(date: string): boolean {
   return Boolean(Date.parse(date));
-};
+}
 
 function parseStringParam(param: unknown, paramName: string): string {
   if (!param || !isString(param)) {
@@ -29,12 +29,13 @@ function parseGender(gender: unknown): Gender {
   return gender;
 }
 
-const parseDateOfBirth = (date: unknown): string => {
+function parseDateOfBirth(date: unknown): string {
   if (!date || !isString(date) || !isDate(date)) {
-      throw new Error(`dateOfBirth is invalid or missing: ${date}`);
+    throw new Error(`dateOfBirth is invalid or missing: ${date}`);
   }
+
   return date;
-};
+}
 
 type Fields = {
   name: unknown,
