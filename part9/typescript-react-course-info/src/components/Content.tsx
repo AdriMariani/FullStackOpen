@@ -1,11 +1,9 @@
-interface CoursePart {
-  name: string,
-  exerciseCount: number
-}
+import Part from "./Part";
+import { CoursePart } from "../types";
 
 function Content({ courseParts }: { courseParts: CoursePart[] }) {
   return <>{courseParts.map(course => (
-    <p key={course.name}>{course.name} {course.exerciseCount}</p>
+    <Part key={course.name} part={course}/>
   ))}</>;
 }
 
