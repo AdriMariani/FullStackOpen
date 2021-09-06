@@ -37,9 +37,9 @@ const courseParts: CoursePart[] = [
     requirements: ["nodejs", "jest"],
     type: "special"
   }
-]
+];
 
-const App = () => {
+function App() {
   const courseName = "Half Stack application development";
 
   return (
@@ -49,6 +49,6 @@ const App = () => {
       <Total total={courseParts.reduce((carry, part) => carry + part.exerciseCount, 0)}/>
     </div>
   );
-};
+}
 
 export default App;
