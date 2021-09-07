@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { useStateValue } from "../state";
+import { updatePatient, useStateValue } from "../state";
 import { Icon } from "semantic-ui-react";
 import { Gender, Patient } from "../types";
 import axios from "axios";
@@ -14,10 +14,7 @@ const PatientInfoPage = () => {
   useEffect(() => {
     const fetchPatient = async () => {
       const { data: patientData } = await axios.get<Patient>(`${apiBaseUrl}/patients/${id}`);
-      dispatch({
-        type: 'UPDATE_PATIENT',
-        payload: patientData
-      });
+      dispatch(updatePatient(patientData));
       setIsLoading(false);
     };
 
