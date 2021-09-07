@@ -51,7 +51,8 @@ function toNewPatient({ name, dateOfBirth, ssn, gender, occupation }: Fields): N
     dateOfBirth: parseDateOfBirth(dateOfBirth),
     ssn: parseStringParam(ssn, 'ssn'),
     gender: parseGender(gender),
-    occupation: parseStringParam(occupation, 'occupation')
+    occupation: parseStringParam(occupation, 'occupation'),
+    entries: []
   };
 
   return newPatient;
