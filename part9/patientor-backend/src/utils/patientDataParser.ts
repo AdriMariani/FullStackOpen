@@ -1,4 +1,4 @@
-import { Gender, NewPatient } from "../types";
+import { Entry, Gender, NewPatient } from "../types";
 
 function isString(text: unknown): text is string {
   return typeof text === 'string' || text instanceof String;
@@ -11,6 +11,11 @@ function isGender(param: any): param is Gender {
 
 function isDate(date: string): boolean {
   return Boolean(Date.parse(date));
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isEntry(entry: any): entry is Entry {
+  return entry.type && (entry.type === 'Hospital' || entry.type === 'OccupationalHealthcare' || entry.type === 'HealthCheck'); 
 }
 
 function parseStringParam(param: unknown, paramName: string): string {
@@ -35,6 +40,15 @@ function parseDateOfBirth(date: unknown): string {
   }
 
   return date;
+}
+
+// @ts-ignore
+function parseEntry(entry: unknown): Entry {
+  if (!entry || !isEntry(entry)) {
+    throw new Error(`entry is invalid or missing: ${entry}`);
+  }
+
+  return entry;
 }
 
 type Fields = {

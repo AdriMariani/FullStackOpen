@@ -1,14 +1,14 @@
 import { Patient, NonSensitivePatient, NewPatient } from "../types";
-import patientData from '../../data/patients.json';
 import { v1 as uuid } from 'uuid';
-import toNewPatient from "../utils/patientDataParser";
+import patients from "../../data/patients";
 
-// since gender is string in data and can't be assigned to enum Gender
-const patients: Patient[] = patientData.map(patient => {
-  const object = toNewPatient(patient) as Patient;
-  object.id = patient.id;
-  return object;
-});
+// commented out as json file is no longer used
+// // since gender is string in data and can't be assigned to enum Gender
+// const patients: Patient[] = patientData.map(patient => {
+//   const object = toNewPatient(patient) as Patient;
+//   object.id = patient.id;
+//   return object;
+// });
 
 function getAllPatients(): Patient[] {
   return patients;
