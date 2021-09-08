@@ -44,8 +44,9 @@ const PatientInfoPage = () => {
       case Gender.Female:
         return <Icon name='venus' />;
       case Gender.Other:
-      default:
         return null;
+      default:
+        throw new Error(`Invalid Gender Value for Patient: ${JSON.stringify(patient)}`);
     }
   };
 
