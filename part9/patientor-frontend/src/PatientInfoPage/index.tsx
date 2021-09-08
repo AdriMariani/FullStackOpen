@@ -5,6 +5,7 @@ import { Icon } from "semantic-ui-react";
 import { Gender, Patient } from "../types";
 import axios from "axios";
 import { apiBaseUrl } from "../constants";
+import EntryDisplay from "../components/EntryDisplay";
 
 const PatientInfoPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -54,6 +55,12 @@ const PatientInfoPage = () => {
       <p>SSN: {patient.ssn}</p>
       <p>Occupation: {patient.occupation}</p>
       <p>Date Of Birth: {patient.dateOfBirth}</p>
+      <h3>Entries</h3>
+      {
+        patient.entries && patient.entries.length > 0 ?
+        patient.entries.map(entry => <EntryDisplay key={entry.id} entry={entry}/>) :
+        <p>No Entries to show for this patient.</p>
+      }
     </div>
   );
 };
