@@ -25,7 +25,7 @@ router.post('/', (req, res) => {
     res.json(newPatient);
   } catch (e) {
     if (e instanceof Error) {
-      res.status(400).send(e.message);
+      res.status(400).json({ error: e.message });
     }
   }
 });
@@ -37,7 +37,7 @@ router.post('/:id/entries', (req, res) => {
     res.json(newEntry);
   } catch (e) {
     if (e instanceof Error) {
-      res.status(400).send(e.message);
+      res.status(400).json({ error: e.message });
     }
   }
 });
